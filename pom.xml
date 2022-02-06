@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.3</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.vimal.app</groupId>
+    <artifactId>RpmSpringApp</artifactId>
+    <version>0.0.1</version>
+    <name>RpmSpringApp</name>
+    <description>Demo project for Spring Boot</description>
+    <properties>
+        <java.version>1.8</java.version>
+        <project.install.directory>${basedir}/install</project.install.directory>
+        <rpm.version>${project.version}</rpm.version>
+        <rpm.baseDir>/opt/app</rpm.baseDir>
+        <uid>root</uid>
+        <gid>root</gid>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.project lombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.16</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-dependency-plugin</artifactId>-->
+<!--                <version>2.8</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>build-classpath</id>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>build-classpath</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <outputFilterFile>true</outputFilterFile>-->
+<!--                            <outputFile>${project.install.directory}/bin/classpath.properties</outputFile>-->
+<!--                            <prefix>/opt/${project.name}/default/lib</prefix>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                    <execution>-->
+<!--                        <id>copy-dependencies</id>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>copy-dependencies</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <outputDirectory>${project.install.directory}/lib</outputDirectory>-->
+<!--                            <overWriteReleases>false</overWriteReleases>-->
+<!--                            <overWriteSnapshots>false</overWriteSnapshots>-->
+<!--                            <overWritelfNewer>true</overWritelfNewer>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rpm-maven-plugin</artifactId>
+                <version>2.2.0</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>rpm</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <version>${rpm.version}</version>
+                    <group>Application/System</group>
+                    <needarch>true</needarch>
+                    <mappings>
+                        <mapping>
+                            <directory>${rpm.baseDir}/${project.name}/config</directory>
+                            <filemode>755</filemode>
+                            <username>${uid}</username>
+                            <groupname>${gid}</groupname>
+                            <sources>
+                                <source>
+                                    <location>${project.install.directory}/config</location>
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                            <directory>${rpm.baseDir}/${project.name}/bin</directory>
+                            <filemode>755</filemode>
+                            <username>${uid}</username>
+                            <groupname>${gid}</groupname>
+                            <sources>
+                                <source>
+                                    <location>${project.install.directory}/bin</location>
+                                </source>
+                            </sources>
+                        </mapping>
+
+                        <mapping>
+                            <directory>${rpm.baseDir}/${project.name}/lib</directory>
+                            <filemode>755</filemode>
+                            <username>${uid}</username>
+                            <groupname>${gid}</groupname>
+                            <sources>
+                                <source>
+                                    <location>${project.install.directory}/lib</location>
+                                </source>
+                            </sources>
+                        </mapping>
+<!--                        <mapping>-->
+<!--                            <directory>${rpm.baseDir}/${project.name}/${rpm.version}/var</directory>-->
+<!--                            <filemode>755</filemode>-->
+<!--                            <username>${uid}</username>-->
+<!--                            <groupname>${gid}</groupname>-->
+<!--                            <sources>-->
+<!--                                <source>-->
+<!--                                    <location>${project.install.directory}/var</location>-->
+
+<!--                                </source>-->
+<!--                            </sources>-->
+<!--                        </mapping>-->
+
+                    </mappings>
+                    <postinstallScriptlet>
+                        <script>
+                            # STANDARD ETD PACKAGE DEPLOYMENT STUFF DO NOT CHANGE THIS SECTION START
+                            echo ""
+                            echo ""
+                            echo "=================================="
+                            echo "In post-install..."
+                            echo "=================================="
+                            ROOT_PATH="/opt"
+                            # change the owner of the "default syn-link to be our functional id (if sym-Link exists)
+                            echo "Fixing the default sym-Link...
+                            if [ -L ${rpm.baseDir}/${project.artifactId}/default ]; then
+                            # default sym-link exists, show what it looks like
+                            cmd="ls -ld ${rpm.baseDir}/${project.artifactId}/default"
+                            echo "$cmd"
+                            eval $cmd
+                            else
+                            # default sym-link does NOT exist, create it
+                            cmd="ln -s ${rpm.baseDir}/${project.artifactId} ${rpm.baseDir}/${project.artifactId}/default"
+                            echo "$cmd"
+                            eval $cmd
+                            #now change the owner of the default syn-link
+                            cmd="chown -hR ${uid}:${gid} ${rpm.baseDir}/${project.artifactId}/default"
+                            echo $cmd"
+                            eval $cmd
+                        </script>
+                    </postinstallScriptlet>
+                    <postremoveScriptlet>
+                        <script>
+                            # STANDARD ETD PACKAGE DEPLOYMENT STUFF DO NOT CHANGE THIS SECTION START
+                            echo ""
+                            echo ""
+                            echo "=================================="
+                            echo "In post-remove..."
+                            echo "=================================="
+                            if [[ -n /opt 1]]; then
+                            # BASE_DIR
+                            if [ -L ${rpm.baseDir}/${project.artifactId}/default ]; then
+                               cmd="rm -rf ${rpm.baseDir}/${project.artifactId}/default"
+                               echo "$cmd"
+                               eval $cmd
+                            fi
+                            fi
+
+                            # BASE_DIR
+                            cmd="rm -rf ${rpm.baseDir}/${project.artifactId}"
+                            echo "$cmd"
+                            eval $cmd
+                        </script>
+                    </postremoveScriptlet>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>initialize</id>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <target>
+                                <mkdir dir="${project.install.directory}"/>
+                                <mkdir dir="${project.install.directory}/config"/>
+                                <mkdir dir="${project.install.directory}/lib"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>prepare-package</id>
+                        <phase>post-integration-test</phase>
+                        <configuration>
+                            <target>
+                                <echo>Hi Mridul Vimal ${project.build.outputDirectory}</echo>
+                                <echo>Hi Mridul sourceDirectory ${project.build.sourceDirectory}</echo>
+                                <echo>Hi Mridul build.directory ${project.build.directory}</echo>
+                                <copy todir="${project.install.directory}/config" includeemptydirs="false">
+                                    <fileset dir="src/main/resources"/>
+                                </copy>
+                                <copy todir="${project.install.directory}/bin" includeemptydirs="false">
+                                    <fileset dir="src/main/bin" />
+                                </copy>
+                                <chmod dir="${project.install.directory}/bin" perm="755" type="dir" includes="**/*"/>
+                                <copy todir="${project.install.directory}/lib">
+                                    <fileset dir="${project.build.directory}" >
+                                        <include name="*.jar"/>
+                                    </fileset>
+                                </copy>
+                                <chmod dir="${project.install.directory}/lib" perm="755" type="dir"/>
+                                <chmod dir="${project.install.directory}/lib" perm="755" type="both" includes="**/*"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b3</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-nodeps</artifactId>
+                        <version>1.8.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,11 @@
+[Unit]
+Description=demo-application
+After=syslog.target
+
+[Service]
+User=demo-application
+ExecStart=/var/demo-application/demo-application-app.jar
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
