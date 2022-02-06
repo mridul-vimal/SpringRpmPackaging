@@ -1,8 +1,16 @@
 # docker build 
-docker build -t centosrpm .
+docker build   .
+#v2
+docker build -t springrmp:1.0 .
+# -t : image tag
 
 # docker run command
-docker run -d --name SpringRPM -it -P centosrpm 
+docker run -d -p 9091:9091 --name RPMEx1 -it -P 328294a49171
+# -d : detach mode
+# -p: port mapping  host:container
 
-#
-docker exec -it SpringRPM /bin/bash
+docker exec -it RPMEx1 /bin/bash
+
+#docker logs
+docker logs -f RPMEx1
+# -f: fresh

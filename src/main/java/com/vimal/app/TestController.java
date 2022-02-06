@@ -16,4 +16,9 @@ public class TestController {
         log.info("Controller Called!");
         return "Hello World!";
     }
+    @GetMapping("bye/")
+    public String bye(){
+        log.info("Controller Called! method bye()");
+        return "Bye World!";
+    }
 }
