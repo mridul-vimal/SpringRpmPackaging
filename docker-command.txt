@@ -1,0 +1,8 @@
+# docker build 
+docker build   .
+
+# docker run command
+docker run -d --name RPMEx1 -it -P 328294a49171
+
+#
+docker exec -it RPMEx1 /bin/bash
